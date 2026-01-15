@@ -1,0 +1,78 @@
+resources:
+  jobs:
+    WF_ETL:
+      name: WF_ETL
+      trigger:
+        pause_status: UNPAUSED
+        file_arrival:
+          url: abfss://raw@adlssmartdata0878.dfs.core.windows.net/
+      tasks:
+        - task_key: PrepAmb
+          notebook_task:
+            notebook_path: /Workspace/Users/easg1978db1_outlook.com#ext#@easg1978db1outlook.onmicrosoft.com/Proyecto-A-tunes-/ETL/Preparacion_Ambiente
+            base_parameters:
+              storageName: adlssmartdata0878
+            source: WORKSPACE
+          environment_key: PrepAmb_environment
+        - task_key: Invoice_Lines
+          depends_on:
+            - task_key: PrepAmb
+          notebook_task:
+            notebook_path: /Workspace/Users/easg1978db1_outlook.com#ext#@easg1978db1outlook.onmicrosoft.com/Proyecto-A-tunes-/ETL/Ingest_Invoiceline_data
+            base_parameters:
+              container: chinook
+              catalogo: c_a_tunes_dev
+              esquema: bronze
+            source: WORKSPACE
+        - task_key: Invoices
+          depends_on:
+            - task_key: PrepAmb
+          notebook_task:
+            notebook_path: /Workspace/Users/easg1978db1_outlook.com#ext#@easg1978db1outlook.onmicrosoft.com/Proyecto-A-tunes-/ETL/Ingest_Invoice_data
+            base_parameters:
+              container: raw
+              catalogo: catalog_smartdata
+              esquema: bronze
+            source: WORKSPACE
+        - task_key: Tracks
+          depends_on:
+            - task_key: PrepAmb
+          notebook_task:
+            notebook_path: /Workspace/Users/easg1978db1_outlook.com#ext#@easg1978db1outlook.onmicrosoft.com/Proyecto-A-tunes-/ETL/Ingest_Tracks_data
+            base_parameters:
+              container: chinook
+              catalogo: c_a_tunes_dev
+              esquema: bronze
+            source: WORKSPACE
+        - task_key: Transform
+          depends_on:
+            - task_key: Invoices
+            - task_key: Invoice_Lines
+            - task_key: Tracks
+          notebook_task:
+            notebook_path: /Workspace/Users/easg1978db1_outlook.com#ext#@easg1978db1outlook.onmicrosoft.com/Proyecto-A-tunes-/ETL/Transform
+            base_parameters:
+              catalogo: c_a_tunes_dev
+              esquema_source: bronze
+              esquema_sink: silver
+            source: WORKSPACE
+        - task_key: Load
+          depends_on:
+            - task_key: Transform
+          notebook_task:
+            notebook_path: /Workspace/Users/easg1978db1_outlook.com#ext#@easg1978db1outlook.onmicrosoft.com/Proyecto-A-tunes-/ETL/Load
+            base_parameters:
+              catalogo: catalog_smartdata
+              esquema_source: silver
+              esquema_sink: golden
+            source: WORKSPACE
+      queue:
+        enabled: true
+      parameters:
+        - name: catalogo
+          default: c_a_tunes_dev
+      environments:
+        - environment_key: PrepAmb_environment
+          spec:
+            environment_version: "4"
+      performance_target: PERFORMANCE_OPTIMIZED
