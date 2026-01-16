@@ -219,11 +219,9 @@ jobs:
               "timeout_seconds": 3600,
               "max_retries": 2,
               "depends_on": [
-                {
-                  "task_key": "Invoices"
-                ##  "task_key": "Invoice_Lines"
-                ##  "task_key": "Tracks"
-                 }
+                { "task_key": "Invoices" },
+                { "task_key": "Invoice_Lines" },
+                { "task_key": "Tracks" }
               ]
             },
             {
