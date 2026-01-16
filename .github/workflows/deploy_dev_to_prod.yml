@@ -158,7 +158,9 @@ jobs:
               "depends_on": [
                 {
                   "task_key": "PrepAmb"
-                },
+                }
+              ]
+            },
             {
               "task_key": "Tracks",
               "description": "Ejecuta notebook Tracks con parámetros",
@@ -177,7 +179,9 @@ jobs:
               "depends_on": [
                 {
                   "task_key": "PrepAmb"
-                },
+                }
+              ]
+            },
             {
               "task_key": "Invoices",
               "description": "Ejecuta notebook Invoices con parámetros",
@@ -196,7 +200,9 @@ jobs:
               "depends_on": [
                 {
                   "task_key": "PrepAmb"
-                },
+                }
+              ]
+            },
             {
               "task_key": "Transform",
               "description": "Ejecuta notebook Transform con parámetros",
@@ -217,7 +223,9 @@ jobs:
                   "task_key": "Invoices"
                   "task_key": "Invoice_Lines"
                   "task_key": "Tracks"
-                },
+                 }
+              ]
+            },
             {
               "task_key": "Load",
               "description": "Ejecuta notebook Invoice_Lines con parámetros",
