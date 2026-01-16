@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🍏 Apple Store Sales and Warranty ETL Pipeline
+# A-Tunes Invoicing ETL Pipeline
 ### Arquitectura Medallion en Azure Databricks
 
 [![Databricks](https://img.shields.io/badge/Databricks-FF3621?style=for-the-badge&logo=databricks&logoColor=white)](https://databricks.com/)
