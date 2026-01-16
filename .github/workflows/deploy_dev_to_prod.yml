@@ -221,8 +221,8 @@ jobs:
               "depends_on": [
                 {
                   "task_key": "Invoices"
-                  "task_key": "Invoice_Lines"
-                  "task_key": "Tracks"
+                ##  "task_key": "Invoice_Lines"
+                ##  "task_key": "Tracks"
                  }
               ]
             },
