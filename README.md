@@ -1,16 +1,10 @@
 <div align="center">
 
-# A-Tunes Invoicing ETL Pipeline
+# 🦈 A-tunes Invoicing ETL Pipeline
 ### Arquitectura Medallion en Azure Databricks
 
-[![Databricks](https://img.shields.io/badge/Databricks-FF3621?style=for-the-badge&logo=databricks&logoColor=white)](https://databricks.com/)
-[![Azure](https://img.shields.io/badge/Azure-0078D4?style=for-the-badge&logo=microsoft-azure&logoColor=white)](https://azure.microsoft.com/)
-[![PySpark](https://img.shields.io/badge/PySpark-E25A1C?style=for-the-badge&logo=apache-spark&logoColor=white)](https://spark.apache.org/)
-[![Delta Lake](https://img.shields.io/badge/Delta_Lake-00ADD8?style=for-the-badge&logo=delta&logoColor=white)](https://delta.io/)
-[![Databricks Dashboards](https://img.shields.io/badge/Databricks Dashboards-F2C81?style=for-the-badge&logo=databricks&logoColor=black)](https://databricks.com/)
-[![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)](https://github.com/features/actions)
 
-*Pipeline automatizado de datos para análisis de ventas y garantias de Apple Stores con arquitectura de tres capas y despliegue continuo*
+*Pipeline automatizado de datos para análisis de ventas y facturación con arquitectura de tres capas y despliegue continuo*
 
 </div>
 
@@ -18,7 +12,7 @@
 
 ## 🎯 Descripción
 
-Pipeline ETL enterprise-grade que transforma datos crudos de ventas y garantias de tiendas Apple de diferentes años y paises, implementando la **Arquitectura Medallion** (Bronze-Silver-Gold) en Azure Databricks con **CI/CD completo** y **Delta Lake** para garantizar consistencia ACID.
+Pipeline ETL enterprise-grade que transforma datos crudos de ventas y garantias de tiendas virtuales de musica de A-tunes de diferentes años y paises, implementando la **Arquitectura Medallion** (Bronze-Silver-Gold) en Azure Databricks con **CI/CD completo** y **Delta Lake** para garantizar consistencia ACID.
 
 ### ✨ Características Principales
 
@@ -26,7 +20,7 @@ Pipeline ETL enterprise-grade que transforma datos crudos de ventas y garantias 
 - 🏗️ **Arquitectura Medallion** - Separación clara de capas Bronze → Silver → Gold
 - 📊 **Modelo Dimensional** - Star Schema optimizado para análisis de negocio
 - 🚀 **CI/CD Integrado** - Deploy automático en cada push a master
-- 📈 **Databricks Dashboards** - Visualización
+- 📈 **Power Bi Dashboards** - Visualización
 - ⚡ **Delta Lake** - ACID transactions y time travel capabilities
 - 🔔 **Monitoreo** - Notificaciones automáticas y logs detallados
 
@@ -48,7 +42,7 @@ Pipeline ETL enterprise-grade que transforma datos crudos de ventas y garantias 
 📊 Databricks Dashboards (Visualización)
 ```
 
-![Texto descriptivo](Arquitectura.png)
+
 
 
 ### 📦 Capas del Pipeline
@@ -61,11 +55,9 @@ Pipeline ETL enterprise-grade que transforma datos crudos de ventas y garantias 
 **Propósito**: Zona de aterrizaje
 
 **Tablas**: 
-- `category` 
-- `products` 
-- `warranty`
-- `sales` 
-- `stores`
+- `Invoices` 
+- `Invoice Lines` 
+- `Tracks` 
 
 **Características**:
 - ✅ Datos tal como vienen de origen
@@ -80,11 +72,8 @@ Pipeline ETL enterprise-grade que transforma datos crudos de ventas y garantias 
 **Propósito**: Modelo dimensional
 
 **Tablas**:
-- `category_sales`
-- `product_sales`
-- `store_sales`
-- `store_warranty_status`
-- `warranty_products`
+- `Track Sales`
+
 
 **Características**:
 - ✅ Star Schema
@@ -99,10 +88,7 @@ Pipeline ETL enterprise-grade que transforma datos crudos de ventas y garantias 
 
 **Tablas**:
 - kpi_category_sales        : Monto total en ventas agrupado por categoría y año
-- kpi_product_sales         : Monto total en ventas agrupado por producto y año
-- kpi_store_sales           : Monto total en ventas agrupado por tienda y año
-- kpi_store_warranty_status : Total de reclamos por tienda en los diferentes estatus pivot
-- kpi_product_warranty      : Productos con mayor reclamos post venta (garantía)
+
 
 **Características**:
 - ✅ Pre-agregados
@@ -119,26 +105,31 @@ Pipeline ETL enterprise-grade que transforma datos crudos de ventas y garantias 
 ## 📁 Estructura del Proyecto
 
 ```
-etl-apple/
+Etl-A-Tunes/
 │
 ├── 📂 .github/
 │   └── 📂 workflows/
-│       └── 📄 deploy-certification.yml    # Pipeline CI/CD deploy a certification workspace databricks
-├── 📂 process/
-│   ├── 🐍 ingest_catalogs.py           # Bronze layer
-│   ├── 🐍 ingest_sales.py              # Bronze Layer
-│   ├── 🐍 ingest_warranty.py           # Bronze Layer
-│   ├── 🐍 transform_sales.py           # Silver Layer
-│   ├── 🐍 transform_warranty.py        # Silver Layer
-│   └── 🐍 load_sales.py                # Gold Layer
-│   └── 🐍 load_warranty.py             # Gold Layer
-├── 📂 scrips/
-|   ├── 🐍 Enviroment preparation.py    # Create Schema, Tables, External location
-├── 📂 security/
-|   ├── 🐍 Permissions.py               # Sql Grant
-├── 📂 reversion/
+│       └── 📄 deploy_dev_to_prod.yml    # Pipeline CI/CD deploy a certification workspace databricks
+├── 📂 ETL/
+│   ├── 🐍 Ingest_Invoice_data.py       # Bronze layer
+│   ├── 🐍 Ingest_Invoiceline_data.py   # Bronze Layer
+│   ├── 🐍 Ingest_Tracks_data.py        # Bronze Layer
+│   ├── 🐍 Transform.py                 # Silver Layer
+│   ├── 🐍 Load.py        # Golden Layer
+│   ├── 🐍 Preparacion de Ambiente.py    # Create Schema, Tables, External location
+├── 📂 Security/
+|   ├── 🐍 Grants.py               # Sql Grant
+├── 📂 Revoke/
 |   ├── 🐍 revoke.py               # Revoke permissions
-├── 📂 dashboards/                 # Databricks Dashboards 
+├── 📂 Dashboards/                              
+|   ├── A-tunes.pbix
+|   ├── ATunes Dashboard.pdf        # PrintScreen collection
+|   ├──   Dashboard.png             # PrintScreen 
+├── 📂 Chinook Dataset
+|   ├── ER Diagram Chinook.pdf
+|   ├── Invoice.csv
+|   ├── InvoiceLine.csv
+|   ├── Tracks.csv
 └── 📄 README.md
 ```
 
@@ -155,7 +146,7 @@ etl-apple/
 | ![PySpark](https://img.shields.io/badge/PySpark-E25A1C?style=flat-square&logo=apache-spark&logoColor=white) | Framework de transformación de datos |
 | ![ADLS](https://img.shields.io/badge/ADLS_Gen2-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white) | Data Lake para almacenamiento persistente |
 | ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=flat-square&logo=github-actions&logoColor=white) | Automatización CI/CD |
-| ![Databricks Dashboards](https://img.shields.io/badge/Databricks Dashboards-F2C81?style=for-the-badge&logo=databricks&logoColor=black) |  Visualización |
+| ![Databricks Dashboards](https://img.shields.io/badge/Power_BI-Power_BI_Data_Analyst_Associate-FEB800) |  Visualización |
 
 </div>
 
@@ -165,10 +156,10 @@ etl-apple/
 
 - ☁️ Cuenta de Azure con acceso a Databricks
 - 💻 Workspace de Databricks configurado
-- 🖥️ Cluster activo (nombre: `Cluster1`)
+- 🖥️ Cluster activo (nombre: `Cluster_SD`)
 - 🐙 Cuenta de GitHub con permisos de administrador
 - 📦 Azure Data Lake Storage Gen2 configurado
-- 📊 Power BI Desktop (opcional para visualización)
+- 📊 Power BI Desktop (visualización)
 
 ---
 
@@ -177,7 +168,7 @@ etl-apple/
 ### 1️⃣ Clonar el Repositorio
 
 ```bash
-git clone https://github.com/guaru/project-databricks.git
+https://github.com/eugsalazar/Proyecto-A-tunes-
 cd project-databricks
 ```
 
@@ -203,7 +194,7 @@ En tu repositorio: **Settings** → **Secrets and variables** → **Actions**
 ### 4️⃣ Verificar Storage Configuration
 
 ```python
-storage_path = "abfss://raw@adlsprojectsmartdata.dfs.core.windows.net"
+storage_path = "abfss://chinook@adlssmartdata0878.dfs.core.windows.net"
 ```
 
 <div align="center">
@@ -225,32 +216,30 @@ git push origin master
 ```
 
 **GitHub Actions ejecutará**:
-- 📤 Deploy de notebooks a `/Production/ETL-APPLE`
-- 🔧 Creación del workflow `WF_PROD_ETL_APPLE_SALES`
+- 📤 Deploy de notebooks a `/py/scripts/main/`
+- 🔧 Creación del workflow `WF_ADB`
 - ▶️ Ejecución completa:  Bronze → Silver → Gold
 - 📧 Notificaciones de resultados
 
 ### 🖱️ Despliegue Manual desde GitHub
 
 1. Ir al tab **Actions** en GitHub
-2. Seleccionar **Deploy ETL Apple Sales And Warranty**
+2. Seleccionar **Deploy ETL A-Tunes**
 3. Click en **Run workflow**
 4. Seleccionar rama `main`
 5. Click en **Run workflow**
 
 ### 🔧 Ejecución Local en Databricks
 
-Navegar a `/Production/ETL-APPLE` y ejecutar en orden:
+Navegar a `/py/scripts/main/` y ejecutar en orden:
 
 ```
-- Enviroment preparation.py         → Crear esquema
-- ingest_catalogs.py                → Bronze Layer
-- ingest_sales.py                   → Bronze Layer
-- ingest_warranty.py                → Bronze Layer
-- transform_sales.py                → Silver Layer
-- transform_warranty.py             → Silver Layer
-- load_sales.py                     → Gold Layer
-- load_warranty.py                  → Gold Layer
+- Preparacion_Ambiente.py           → Crear esquema
+- Ingest_Invoice_data.py            → Bronze Layer
+- ingest_Invoiceline_data.py        → Bronze Layer
+- Ingest_Tracks_data.py             → Bronze Layer
+- Transform.py                      → Silver Layer
+- Load.py                           → Gold Layer
 ```
 
 ---
@@ -262,16 +251,16 @@ Navegar a `/Production/ETL-APPLE` y ejecutar en orden:
 
 ```yaml
 Workflow: Deploy ETL Apple Sales And Warranty
-├── Deploy notebooks → /Production/ETL-APPLE
+├── Deploy notebooks → /py/scripts/main/
 ├── Eliminar workflow antiguo (si existe)
 ├── Buscar cluster configurado
-├── Crear nuevo workflow con 4 tareas
+├── Crear nuevo workflow con 6 tareas
 ├── Ejecutar pipeline automáticamente
 └── Monitorear y notificar resultados
 ```
 
 ### 🔄  Workflow Databricks
-![Texto descriptivo](CICD_ETL_APPLE.png)
+![Texto descriptivo](CICD_ETL_A-Tunes.png)
 ```
 
 
@@ -279,14 +268,14 @@ Workflow: Deploy ETL Apple Sales And Warranty
 ⏱️ Timeout total: 4 horas
  🔒 Max concurrent runs: 1
 ⏰ Notificaciones: 
-      success: isc.ventura@gmail.com
-      failed:  isc.ventura@gmail.com
+      success: eugsalazar@gmail.com
+      failed:  eugsalazar@gmail.com
 ```
 
 ---
 
 ## 📈 Dashboards
-https://github.com/guaru/project-databricks/tree/dev/dashboards
+https://github.com/eugsalazar/Proyecto-A-tunes-/blob/main/Dashboard/A-tunes.pbix
 
 ## 🔍 Monitoreo
 
@@ -294,7 +283,7 @@ https://github.com/guaru/project-databricks/tree/dev/dashboards
 
 **Workflows**:
 - Ir a **Workflows** en el menú lateral
-- Buscar `ETL_PROD_APPLE_SALES`
+- Buscar `A-Tunes`
 - Ver historial de ejecuciones
 
 **Logs por Tarea**:
@@ -315,11 +304,11 @@ https://github.com/guaru/project-databricks/tree/dev/dashboards
 
 <div align="center">
 
-### Alejandro de Jesus Ventura Martinez
+### Eugenio Salazar Gómez 
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/alejandro-ventura-martinez-049009142/)
-[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/guaru)
-[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:isc.ventura@gmail.com)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/eugeniosalazarg/)
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/eugsalazar)
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:eugsalazar@gmail.com)
 
 **Data Engineering** | **Azure Databricks** | **Delta Lake** | **CI/CD**
 
@@ -337,7 +326,7 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) par
 
 **Proyecto**: Data Engineering - Arquitectura Medallion  
 **Tecnología**: Azure Databricks + Delta Lake + CI/CD  
-**Última actualización**: 2025
+**Última actualización**: 2026
 
 
 </div>
